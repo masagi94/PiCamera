@@ -22,6 +22,7 @@
 #define BUTTON2 24
 #define OFFBUTTON 20
 #define LED 23
+#define LED2 29
 
 // ADC wiringPi pin connections
 #define ADC_CLK 14
@@ -118,6 +119,12 @@ int main(){
     // Sets up the signals and buttons for use
     configure();
 
+    // led_on(LED2);
+     delay(500);
+    // led_off(LED2);
+    // led_on(LED);
+    // delay(2000);
+    // led_off(LED);
 
     // When initialize wiring failed, print message to screen
     if(wiringPiSetup() == -1){
@@ -140,9 +147,10 @@ int main(){
         
         // printf("usb1: %s\n", usbName);
         createPicCommand(picCommand, usbName);
+        //delay(200);
         printf("%s\n", picCommand);
         updateLCD(fd, usbName);
-        delay(100);
+        delay(200);
 
         int num = (int) ADCResult();
         int result = (num*100)/255;
@@ -153,10 +161,12 @@ int main(){
 
         
         if(takePicture == 1){
+            
+            led_on(LED);
             if(usbReady == 1){
 
                 printf("TAKING PIC\n");
-                led_on(LED);
+                
                 createPicCommand(picCommand, usbName);
                 
                 delay(500);
@@ -165,8 +175,9 @@ int main(){
                 int ret1 = system(picCommand);
                 
                 //printf("ret1 = %d\n", ret1);
-                
+                led_off(LED);
                 if (ret1 == 0){
+                    //led_on(LED2);
                     updateLCD(fd, "Picture Saved!");
                 }
                 else{
@@ -176,6 +187,7 @@ int main(){
 
                 delay(2000);
                 led_off(LED);
+                //led_off(LED2);
             }
         
             else{
@@ -185,6 +197,7 @@ int main(){
             }
 
             takePicture = 0;  
+            led_off(LED);
         }
     }
 
